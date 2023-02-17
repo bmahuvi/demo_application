@@ -42,11 +42,9 @@ class _ProductsState extends State<Products> {
           ),
           Consumer<ProductProvider>(
               builder: (context, value, child) => IconButton(
-                  onPressed: value.products!.isEmpty
-                      ? null
-                      : () {
-                          _scaffoldKey.currentState!.openEndDrawer();
-                        },
+                  onPressed: () {
+                    _scaffoldKey.currentState!.openEndDrawer();
+                  },
                   icon: const Icon(Icons.filter_alt_outlined)))
         ],
       ),
