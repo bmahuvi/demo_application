@@ -33,16 +33,21 @@ class _ProductsState extends State<Products> {
         actions: [
           Consumer<ProductProvider>(
             builder: (context, value, child) => IconButton(
-                onPressed: () {
-                  showSearch(context: context, delegate: Search());
-                },
+                onPressed: value.products!.isEmpty
+                    ? null
+                    : () {
+                        showSearch(context: context, delegate: Search());
+                      },
                 icon: const Icon(Icons.search_outlined)),
           ),
-          IconButton(
-              onPressed: () {
-                _scaffoldKey.currentState!.openEndDrawer();
-              },
-              icon: const Icon(Icons.filter_alt_outlined))
+          Consumer<ProductProvider>(
+              builder: (context, value, child) => IconButton(
+                  onPressed: value.products!.isEmpty
+                      ? null
+                      : () {
+                          _scaffoldKey.currentState!.openEndDrawer();
+                        },
+                  icon: const Icon(Icons.filter_alt_outlined)))
         ],
       ),
       endDrawer: const AppDrawer(),
