@@ -9,7 +9,7 @@ class Services {
     List<ProductModel>? productModel;
     try {
       final response = await http
-          .get(Uri.parse(AppData.baseUrl))
+          .get(Uri.parse(Uri.encodeFull(AppData.baseUrl)))
           .timeout(AppData.httpTimeout);
 
       if (response.statusCode == 200) {
