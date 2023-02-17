@@ -1,6 +1,19 @@
 # demo_application
 
-A new Flutter project.
+A demo application consuming https://fakestoreapi.com/products API.
+
+Using Provider package for state management
+
+Features:
+-Cart
+-Search
+-Filter
+-Product List
+-Product Details
+-Dark Mode
+-MAterial 3
+
+APK (app_release.apk) ia also included
 
 ## Getting Started
 
