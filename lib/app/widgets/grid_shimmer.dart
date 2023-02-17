@@ -17,20 +17,44 @@ class GridShimmer extends StatelessWidget {
           return Shimmer.fromColors(
             baseColor: Colors.grey.shade300,
             highlightColor: Colors.white,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 8,
-                    width: 100,
-                    color: Colors.grey.shade500,
-                  ),
-                ],
-              ),
+            child: Row(
+              children: [
+                Container(
+                  width: 120,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        width: double.infinity,
+                        height: 16,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8))),
+                    Container(
+                        margin: const EdgeInsets.only(top: 6, right: 48),
+                        width: double.infinity,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8))),
+                    Container(
+                        margin: const EdgeInsets.only(top: 6),
+                        width: 120,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8)))
+                  ],
+                ))
+              ],
             ),
           );
         },

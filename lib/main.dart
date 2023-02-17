@@ -2,13 +2,15 @@ import 'package:demo_application/splash_screen.dart';
 import 'package:demo_application/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'app/provider/providers.dart';
 import 'app/theme/theme.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
@@ -29,16 +31,18 @@ class MyApp extends StatelessWidget {
         ],
         child: Builder(
           builder: (context) {
-            final theme = Provider.of<ChangeThemeProvider>(context);
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'E-commerce App',
-              themeMode: theme.themeMode,
-              darkTheme: darkTheme,
-              theme: lightTheme,
-              routes: AppRoutes.routes,
-              home: const SplashScreen(),
-            );
+            return Consumer<ChangeThemeProvider>(
+                builder: (context, theme, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'E-commerce App',
+                themeMode: theme.isDark ? ThemeMode.dark : ThemeMode.light,
+                darkTheme: theme.isDark ? darkTheme : lightTheme,
+                theme: theme.isDark ? darkTheme : lightTheme,
+                routes: AppRoutes.routes,
+                home: const SplashScreen(),
+              );
+            });
           },
         ));
   }

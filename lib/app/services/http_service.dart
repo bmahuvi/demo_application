@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:demo_application/models/products_model.dart';
 import 'package:demo_application/utils/constants.dart';
@@ -16,9 +15,8 @@ class Services {
       if (response.statusCode == 200) {
         productModel = productModelFromJson(response.body);
       }
-    } on SocketException catch (e) {
-      print(e.message);
-      return Future.error(e);
+    } catch (e) {
+      print(e.toString());
     }
     return productModel;
   }

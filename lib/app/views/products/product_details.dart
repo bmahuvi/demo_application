@@ -18,11 +18,30 @@ class ProductDetails extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     ProductModel model =
         ModalRoute.of(context)!.settings.arguments as ProductModel;
-    final cart = Provider.of<CartProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Details'),
+        actions: [
+          Consumer<CartProvider>(
+            builder: (context, cart, child) => Badge(
+              alignment: const AlignmentDirectional(26, 0),
+              label: Text('${cart.cartItems.length}'),
+              largeSize: 18,
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              isLabelVisible: cart.cartItems.isNotEmpty,
+              child: child,
+            ),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, Cart.routeName);
+                },
+                icon: const Icon(Icons.shopping_cart_outlined)),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+        ],
       ),
       body: Container(
         width: size.width,

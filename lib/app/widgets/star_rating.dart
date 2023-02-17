@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class StarRating extends StatelessWidget {
   final double rating;
+  final double? size;
 
-  const StarRating({Key? key, required this.rating}) : super(key: key);
+  const StarRating({Key? key, required this.rating, this.size = 14})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class StarRating extends StatelessWidget {
     return Icon(
       icon,
       color: color,
-      size: 14,
+      size: size,
     );
   }
 }

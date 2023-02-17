@@ -1,8 +1,7 @@
 import 'package:demo_application/app/provider/product_provider.dart';
-import 'package:demo_application/app/views/products/product_details.dart';
 import 'package:demo_application/app/widgets/grid_shimmer.dart';
-import 'package:demo_application/app/widgets/image_container.dart';
-import 'package:demo_application/app/widgets/star_rating.dart';
+import 'package:demo_application/app/widgets/product_card.dart';
+import 'package:demo_application/models/products_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,23 +15,32 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   void initState() {
     Provider.of<ProductProvider>(context, listen: false).fetchData();
     super.initState();
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      endDrawerEnableOpenDragGesture: false,
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('DemoAPP'),
         actions: [
+          Consumer<ProductProvider>(
+            builder: (context, value, child) => IconButton(
+                onPressed: () {
+                  showSearch(context: context, delegate: Search());
+                },
+                icon: const Icon(Icons.search_outlined)),
+          ),
           IconButton(
               onPressed: () {
-                // _scaffoldKey.currentState!.isDrawerOpen;
-                Scaffold.of(context).openEndDrawer();
+                _scaffoldKey.currentState!.openEndDrawer();
               },
               icon: const Icon(Icons.filter_alt_outlined))
         ],
@@ -42,42 +50,25 @@ class _ProductsState extends State<Products> {
           builder: (context, productModel, child) => Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
-                child: !productModel.isLoading
+                child: productModel.isLoading
                     ? const Center(
                         child: GridShimmer(),
                       )
-                    : productModel.isError
+                    : productModel.products!.isEmpty
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CircleAvatar(
+                              const CircleAvatar(
                                   radius: 40,
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .errorContainer,
                                   child: Icon(
-                                    Icons.wifi_off_outlined,
+                                    Icons.error_outline,
                                     size: 40,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onErrorContainer,
                                   )),
-                              const SizedBox(
-                                height: 20,
-                              ),
+                              const SizedBox(height: 16),
                               Text(
-                                'TIMEOUT: Network error occured',
-                                style: Theme.of(context).textTheme.titleMedium,
+                                'No products to display',
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
-                              const SizedBox(
-                                height: 32,
-                              ),
-                              FilledButton.icon(
-                                  onPressed: () {
-                                    productModel.fetchData();
-                                  },
-                                  icon: const Icon(Icons.refresh_outlined),
-                                  label: const Text('Retry')),
                             ],
                           )
                         : GridView.builder(
@@ -86,84 +77,67 @@ class _ProductsState extends State<Products> {
                               crossAxisCount: 1,
                               mainAxisExtent: 180,
                             ),
-                            itemCount: productModel.products.length,
+                            itemCount: productModel.products!.length,
                             itemBuilder: (BuildContext context, int index) {
-                              final product = productModel.products[index];
-                              return Card(
-                                clipBehavior: Clip.hardEdge,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, ProductDetails.routeName,
-                                        arguments: product);
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          ImageContainer(
-                                              imageUrl: product.image,
-                                              productId: product.id,
-                                              height: 100,
-                                              width: 100),
-                                          Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0),
-                                                child: StarRating(
-                                                  rating: product.rating.rate,
-                                                ),
-                                              ),
-                                              Text(' (${product.rating.count})')
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        width: 16,
-                                      ),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 16.0, right: 8),
-                                              child: Text(
-                                                product.title,
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 16),
-                                              child: Text(
-                                                'USD ${product.price}',
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
+                              final product = productModel.products![index];
+                              return ProductCard(product: product);
                             },
                           ),
               )),
+    );
+  }
+}
+
+class Search extends SearchDelegate {
+  @override
+  String get searchFieldLabel => 'Search by title';
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+          onPressed: () {
+            if (query.isEmpty) {
+              close(context, null);
+            } else {
+              query = '';
+            }
+          },
+          icon: const Icon(Icons.clear))
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          close(context, null);
+        },
+        icon: const Icon(Icons.arrow_back_outlined));
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Center(
+      child: Text(
+        query,
+        style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final provider = Provider.of<ProductProvider>(context, listen: false);
+    List<ProductModel> suggestions = provider.products!
+        .where((element) =>
+            element.title.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(10),
+      itemBuilder: (context, index) => ProductCard(product: suggestions[index]),
+      itemCount: suggestions.length,
     );
   }
 }

@@ -1,5 +1,7 @@
+import 'package:demo_application/app/provider/providers.dart';
 import 'package:demo_application/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -29,6 +31,16 @@ class Settings extends StatelessWidget {
             title: const Text('HTTP timeout duration'),
             trailing: Text('${AppData.httpTimeout.inSeconds} seconds'),
           ),
+          Consumer<ChangeThemeProvider>(
+            builder: (context, theme, child) => SwitchListTile.adaptive(
+              value: theme.isDark,
+              secondary: Icon(theme.isDark
+                  ? Icons.nightlight_round
+                  : Icons.wb_sunny_outlined),
+              title: const Text('Dark mode'),
+              onChanged: theme.changeTheme,
+            ),
+          )
         ]).toList(),
       ),
     );
