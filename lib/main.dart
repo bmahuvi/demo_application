@@ -1,4 +1,4 @@
-import 'package:demo_application/splash_screen.dart';
+import 'package:demo_application/app/splash_screen.dart';
 import 'package:demo_application/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
