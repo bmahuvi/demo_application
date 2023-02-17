@@ -1,10 +1,15 @@
-import 'package:demo_app/app/controllers/app_controller.dart';
+import 'package:demo_application/app/provider/bottom_nav_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-class EmptyCart extends GetView<AppController> {
+class EmptyCart extends StatefulWidget {
   const EmptyCart({super.key});
 
+  @override
+  State<EmptyCart> createState() => _EmptyCartState();
+}
+
+class _EmptyCartState extends State<EmptyCart> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -21,10 +26,10 @@ class EmptyCart extends GetView<AppController> {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundColor: context.theme.colorScheme.errorContainer,
+                backgroundColor: Theme.of(context).colorScheme.errorContainer,
                 child: Icon(
                   Icons.remove_shopping_cart_outlined,
-                  color: context.theme.colorScheme.onErrorContainer,
+                  color: Theme.of(context).colorScheme.onErrorContainer,
                   size: 40,
                 ),
               ),
@@ -33,17 +38,18 @@ class EmptyCart extends GetView<AppController> {
               ),
               Text(
                 'Cart is empty',
-                style: context.theme.textTheme.titleLarge,
-              )
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ],
           )),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 50),
-            child: FilledButton(
-                onPressed: () {
-                  controller.defaultSelectedTab(0);
-                },
-                child: const Center(child: Text('Start shopping'))),
+            child: Consumer<BottomNavProvider>(
+                builder: (context, nav, child) => FilledButton(
+                    onPressed: () {
+                      nav.defaultSelectedTab = 0;
+                    },
+                    child: const Center(child: Text('Start shopping')))),
           )
         ],
       ),

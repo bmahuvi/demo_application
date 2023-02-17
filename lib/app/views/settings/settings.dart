@@ -1,9 +1,7 @@
-import 'package:demo_app/app/controllers/app_controller.dart';
-import 'package:demo_app/utils/constants.dart';
+import 'package:demo_application/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class Settings extends GetView<AppController> {
+class Settings extends StatelessWidget {
   const Settings({super.key});
 
   @override
@@ -15,14 +13,7 @@ class Settings extends GetView<AppController> {
       ),
       body: ListView(
         children:
-            ListTile.divideTiles(color: context.theme.dividerColor, tiles: [
-          SwitchListTile.adaptive(
-              secondary: Icon(controller.isDark
-                  ? Icons.dark_mode_outlined
-                  : Icons.light_mode_outlined),
-              title: const Text('Dark mode'),
-              value: controller.isDark,
-              onChanged: controller.changeTheme),
+            ListTile.divideTiles(color: Theme.of(context).dividerColor, tiles: [
           ListTile(
             leading: const Icon(Icons.shopping_cart_outlined),
             title: const Text('Maximum cart items'),

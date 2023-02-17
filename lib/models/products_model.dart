@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ProductModel {
   ProductModel({
     required this.id,
@@ -57,3 +59,9 @@ class Rating {
         "count": count,
       };
 }
+
+List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(
+    json.decode(str).map((x) => ProductModel.fromJson(x)));
+
+String productModelToJson(List<ProductModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

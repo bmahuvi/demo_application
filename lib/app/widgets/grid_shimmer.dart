@@ -11,7 +11,8 @@ class GridShimmer extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         primary: false,
-        itemCount: 6,
+        itemCount: 12,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, index) {
           return Shimmer.fromColors(
             baseColor: Colors.grey.shade300,
@@ -34,7 +35,7 @@ class GridShimmer extends StatelessWidget {
           );
         },
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: 1,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           mainAxisExtent: 100,
